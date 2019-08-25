@@ -10,6 +10,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.14.3</version>
@@ -37,10 +42,39 @@
             <artifactId>commons-configuration2</artifactId>
             <version>2.5</version>
         </dependency>
+        <!-- Useful to Parse JSON Documents -->
         <dependency>
             <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
+            <artifactId>json-path</artifactId>
             <version>4.0.0</version>
+        </dependency>
+        <!-- Useful to Validate if Json response confirms to JSON Schema -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Useful to Parse XML Documents -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>xml-path</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.14.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.9.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
         </dependency>
     </dependencies>
 </project>
