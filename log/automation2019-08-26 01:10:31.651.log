@@ -1,0 +1,10 @@
+Aug 26, 2019 1:10:31 AM narvar.utilities.Logtool log
+INFO: In - BeforeTest
+Aug 26, 2019 1:10:31 AM narvar.utilities.Logtool log
+INFO: In - BeforeClass
+Aug 26, 2019 1:10:31 AM narvar.utilities.Logtool log
+INFO: In - BeforeMethod
+Aug 26, 2019 1:10:31 AM narvar.utilities.Logtool log
+INFO: In - AfterMethod
+Aug 26, 2019 1:10:31 AM narvar.utilities.Logtool log
+INFO: In - AfterTest
