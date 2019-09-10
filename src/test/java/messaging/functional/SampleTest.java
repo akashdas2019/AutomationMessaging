@@ -3,10 +3,9 @@ package messaging.functional;
 import narvar.automation.AbstarctBaseTest;
 import narvar.utilities.Logtool;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+
 import org.testng.SkipException;
-
-
+import org.testng.annotations.Test;
 import java.util.logging.Level;
 
 public class SampleTest extends AbstarctBaseTest {
@@ -14,9 +13,6 @@ public class SampleTest extends AbstarctBaseTest {
     public void test1() {
         extentTest = extent.createTest("test1", "Test1 Description");
         SampleTest t = new SampleTest();
-        String filename = System.getProperty("user.dir")+"/config/message.properties";
-        t.configurator.setPropetiesFile(filename);
-        System.out.println("Config File Parameter is : "+(String) t.configurator.getPropertyFromPropertiesFile("rest.baseuri"));
         Logtool.log(Level.INFO, "This test case will pass");
     }
 

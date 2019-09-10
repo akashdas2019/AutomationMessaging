@@ -4,6 +4,7 @@ import io.restassured.RestAssured.*;
 import io.restassured.matcher.RestAssuredMatchers.*;
 import narvar.utilities.Configurator;
 import narvar.utilities.Logtool;
+import narvar.utilities.RestClient;
 import org.hamcrest.Matchers.*;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -11,6 +12,8 @@ import org.testng.annotations.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -32,6 +35,7 @@ public class AbstarctBaseTest {
     public ExtentReports extent;
     public ExtentTest extentTest;
     public Configurator configurator;
+    public Map<String, RestClient> restClients;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
     public AbstarctBaseTest() {
@@ -49,15 +53,27 @@ public class AbstarctBaseTest {
         htmlReporter.config().setTheme(Theme.STANDARD);
         htmlReporter.config().setTimeStampFormat("EEEE, MMMM dd, yyyy, hh:mm a '('zzz')'");
 
+        // Read Config File and read the end point and port for a given service
+        String currentDirectory = System.getProperty("user.dir");
+        String propertiesFile = currentDirectory+"/config/serviceconfiguration.properties";
+        configurator = new Configurator(propertiesFile);
+
+        extent.setSystemInfo("Properties File", propertiesFile);
         extent.setSystemInfo("Environemnt", "QA");
         extent.setSystemInfo("user", "Automation-Team");
 
-        // Read Config File and read the end point and port for a given service
-        configurator = new Configurator();
-        String currentDirectory = System.getProperty("user.dir");
-        String propertiesFile = currentDirectory+"/config/message.properties";
-        extent.setSystemInfo("Properties File", propertiesFile);
-        configurator.setPropetiesFile(propertiesFile);
+        restClients = populateRestClients(configurator);
+    }
+
+    private Map<String, RestClient> populateRestClients(Configurator configurator) {
+        Map<String, RestClient> restclients = new HashMap<String, RestClient>();
+        Map<String, String> serviceUrls = configurator.getAllPropertiesMapThatStartsWithAndContains("service","baseurl");
+        for (String key: serviceUrls.keySet()) {
+            RestClient client = new RestClient(serviceUrls.get(key));
+            restclients.put(key, client);
+        }
+
+        return restclients;
     }
 
     public void getResult(ITestResult result) {

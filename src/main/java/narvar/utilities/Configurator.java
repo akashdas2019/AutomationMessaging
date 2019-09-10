@@ -10,39 +10,62 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class Configurator {
 
-    File propertiesFile;
-    File xmlFile;
-    Configurations configs = new Configurations();
+    private File propertiesFile;
+    public Properties properties;
 
-
-    public void setPropetiesFile(String propertiesFileName) {
+    public Configurator(String propertiesFileName) {
         this.propertiesFile = new File(propertiesFileName);
-    }
-
-    public void setXMLFile(String xmlFileName) {
-        this.xmlFile = new File(xmlFileName);
+        properties = new Properties();
+        try {
+            properties.load(new FileInputStream(this.propertiesFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Object getPropertyFromPropertiesFile(String parameter) {
-        try {
-            Configuration config = configs.properties(this.propertiesFile);
-            return config.getProperty(parameter);
-        } catch (ConfigurationException ex) {
-            ex.printStackTrace();
-            return null;
-        }
+        return properties.getProperty(parameter);
     }
 
-    public Object getPropertyFromXMLFile(String parameter) {
-        try {
-            XMLConfiguration config = configs.xml(this.xmlFile);
-            return config.getProperty(parameter);
-        } catch (ConfigurationException ex) {
-            ex.printStackTrace();
-            return null;
+    public List<String> getAllPropertyNames() {
+        List<String> propertyNames = new LinkedList<String>();
+        for (Enumeration<?> keys = properties.propertyNames(); keys.hasMoreElements(); ) {
+            propertyNames.add((String) keys.nextElement());
         }
+        return propertyNames;
     }
+
+    public List<String> getAllPropertyNamesThatStartsWith(String startName) {
+        List<String> propertyNames = new LinkedList<String>();
+        for (Enumeration<?> keys = properties.propertyNames(); keys.hasMoreElements(); ) {
+
+            if (((String) keys.nextElement()).contains(startName)) {
+                propertyNames.add((String) keys.nextElement());
+            }
+        }
+        return propertyNames;
+    }
+
+    public Map<String, String> getAllPropertiesMapThatStartsWithAndContains(String startName, String contains) {
+        Map<String, String> propertyMap = new HashMap<String, String>();
+        for (Enumeration<?> keys = properties.propertyNames(); keys.hasMoreElements(); ) {
+            String keyName = (String) keys.nextElement();
+            if (keyName.contains(startName) && keyName.contains(contains)) {
+                String[] elements = keyName.split("\\.");
+                if (elements.length == 2) {
+                    String serviceName = keyName.split("\\.")[1];
+                    String baseUrl = keyName.split(".")[2];
+                    propertyMap.put(serviceName,baseUrl);
+                }
+            }
+        }
+        return propertyMap;
+    }
+
 }

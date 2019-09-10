@@ -2,6 +2,13 @@
 .log
 Testng.xml
 
+/target
+.DS_Store
+.classpath
+.project
+.settings
+.idea
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

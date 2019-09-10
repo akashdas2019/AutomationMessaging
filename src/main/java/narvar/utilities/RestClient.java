@@ -16,13 +16,32 @@ public class RestClient {
 
     RequestSpecification httpRequest;
 
-    public RestClient() {
-        Configurator configurator = new Configurator();
-        configurator.setPropetiesFile("messaging.properties");
-        RestAssured.baseURI = configurator.getPropertyFromPropertiesFile("rest.baseuri").toString();
-        String port = configurator.getPropertyFromPropertiesFile("rest.port").toString();
+    public RestClient(String baseURI, String port) {
+        if (baseURI == null) {
+            return;
+        }
+        RestAssured.baseURI = baseURI;
         if (port != null) {
             RestAssured.port = Integer.valueOf(port);
+        }
+
+        httpRequest = RestAssured.given();
+    }
+
+    public RestClient(String baseUriPortOptional) {
+        if (baseUriPortOptional.contains(":")) {
+            String baseURI = baseUriPortOptional.split(":")[0];
+            String port = baseUriPortOptional.split(":")[1];
+            if (baseURI == null) {
+                return;
+            }
+
+            if (port != null) {
+                RestAssured.port = Integer.valueOf(port);
+            }
+            RestAssured.baseURI = baseURI;
+        } else {
+            RestAssured.baseURI = baseUriPortOptional;
         }
 
         httpRequest = RestAssured.given();
