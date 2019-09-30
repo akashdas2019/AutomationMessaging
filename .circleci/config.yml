@@ -1,1 +1,54 @@
 
+aliases:
+  - &defaults
+    docker:
+      # Primary container image
+      - image: $DOCKER_REPO/alpine-oraclejdk8:202-master
+    working_directory: ~/AutomationFrameworkTemplate/
+  - &attach_workspace
+    attach_workspace:
+      at: ~/
+  - &create_deps_checksum
+    run: cat pom.xml > deps_checksum
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - *create_deps_checksum
+      - *attach_workspace
+      - run:
+          name: Build JAR file to run
+          command: |
+            export M2_HOME=/usr/lib/mvn
+            jfrog rt c artifactory-qa --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USERNAME --password=$ARTIFACTORY_PASSWORD
+            jfrog rt mvn "install -f pom.xml -Dtest=AbstarctBaseTest test" ~/artifactory.yml
+      - *attach_workspace
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - AutomationFrameworkTemplate
+            - .m2
+
+
+
+workflows:
+  version: 2
+  orderapitesting:
+    jobs:
+     - build:
+         context: qa01
+         filters:
+          branches:
+            only: master
+           
+  schedule-workflow:          
+    triggers:        
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+      - build 
